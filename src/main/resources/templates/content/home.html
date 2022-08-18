@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="-{layout/layout}">
+    <th:block layout:fragment="head">
+        <title>Spring boot</title>
+        <link th:href="@{/css/common.css}" rel="stylesheet" />
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+        <script>
+            function getMultiFormData($form){
+
+                var formData = new FormData($form[0]);
+
+                return formData;
+            }
+
+            function sendFile() {
+                var formData = getMultiFormData($("#formData"));
+
+                $.ajax({
+                    type: "POST"
+                    , enctype: "multipart/form-data"
+                    , async: true
+                    , url: "/sampleFile"
+                    , data: formData
+                    , processData: false
+                    , contentType: false
+                    , traditional: true
+                    , beforeSend: function () {
+                    }
+                    , error: function (request, status, error) {
+                        alert("처리 중 오류가 발생하였습니다.");
+                        console.log("request : ", request);
+                        console.log("status : ", status);
+                        console.log("error : ", error);
+                    }
+                    , success: function (data) {
+
+                        console.log("data : ", data)
+
+                    }
+                })
+            };
+
+            $(document).ready(function() {
+                $("#sendBtn").click(function (){
+                    sendFile();
+                })
+            });
+
+        </script>
+    </th:block>
+
+    <body>
+        <th:block layout:fragment="header" th:include="@{/fragments/header}"></th:block>
+
+        <div layout:fragment="content" class="content">
+
+            <form id="formData" method="post">
+                <div>
+                    <input type="file" name="uploadFile" multiple="multiple">
+                </div>
+                <div>
+                    <input type="text" name="sampleText" value="testText">
+                </div>
+                <div>
+                    <input type="text" name="sampleText1" value="testText1">
+                </div>
+                <div>
+                    <select name="selectBox">
+                        <option value="a">a</option>
+                        <option value="b">b</option>
+                    </select>
+                </div>
+
+                <button type="button" value="전송" id="sendBtn">전송</button>
+            </form>
+
+            <h2>This is Content</h2>
+            <hr />
+
+            <table border="1">
+                <tr>
+                    AAa
+                </tr>
+                <th:block th:each="rl : ${resultList}">
+                    <tr>
+                        <td th:text="${rl}"></td>
+                    </tr>
+                </th:block>
+            </table>
+        </div>
+
+        <th:block layout:fragment="footer" th:include="@{/fragments/footer}"></th:block>
+    </body>
+
+</html>
